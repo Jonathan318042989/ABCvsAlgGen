@@ -1,9 +1,9 @@
 import random
 
-capacidad_mochila = 50 
-pesos = [40, 20, 30, 15, 5]  
-valores = [100, 250, 150, 80, 60] 
-num_elementos = len(pesos)  
+capacidad_mochila = 50
+pesos = [40, 20, 30, 15, 5]
+valores = [100, 250, 150, 80, 60]
+num_elementos = len(pesos)
 
 num_abejas = 10  
 iteraciones = 100
