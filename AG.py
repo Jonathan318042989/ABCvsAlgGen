@@ -35,7 +35,7 @@ class AlgoritmoGeneticoMochila:
             for individuo, evaluacion in evaluaciones:
                 acumulado += 1 / (evaluacion + 1)
                 if acumulado > punto:
-                    padres_seleccionados.append(individuo)  # Almacenar el individuo, no la tupla
+                    padres_seleccionados.append(individuo)  
                     break
         return padres_seleccionados
 
@@ -74,8 +74,8 @@ class AlgoritmoGeneticoMochila:
 
 if __name__ == "__main__":
     capacidad_mochila = 50
-    pesos = [10, 20, 30, 15, 5]
-    valores = [100, 250, 150, 80, 60]
+    pesos = [10, 20, 30, 15, 5, 45, 10, 70, 40]
+    valores = [100, 250, 150, 80, 60, 50, 90, 70, 30]
     num_elementos = len(pesos)
 
     alg_gen = AlgoritmoGeneticoMochila(capacidad_mochila, pesos, valores, num_elementos)
@@ -89,6 +89,6 @@ if __name__ == "__main__":
     plt.plot(mejores_valores)
     plt.xlabel('Iteraciones')
     plt.ylabel('Mejor valor de la función objetivo')
-    plt.title('Evolución del valor de la función objetivo')
+    plt.title('Rendimiento del algoritmo AG para el problema de la mochila')
     plt.grid(True)
     plt.show()
