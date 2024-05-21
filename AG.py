@@ -1,4 +1,5 @@
 import random
+import matplotlib.pyplot as plt
 
 class AlgoritmoGeneticoMochila:
     def __init__(self, capacidad_mochila, pesos, valores, num_elementos, poblacion_tamano=20, iteraciones=1000, prob_mutacion=0.1):
@@ -34,10 +35,9 @@ class AlgoritmoGeneticoMochila:
             for individuo, evaluacion in evaluaciones:
                 acumulado += 1 / (evaluacion + 1)
                 if acumulado > punto:
-                    padres_seleccionados.append((individuo, evaluacion))
+                    padres_seleccionados.append(individuo)  # Almacenar el individuo, no la tupla
                     break
         return padres_seleccionados
-
 
     def cruzar_padres(self, padre1, padre2):
         punto_cruza = random.randint(0, self.num_elementos - 1)
@@ -53,17 +53,20 @@ class AlgoritmoGeneticoMochila:
 
     def algoritmo_genetico(self):
         poblacion = [self.generar_solucion() for _ in range(self.poblacion_tamano)]
+        mejores_valores = []
 
         for _ in range(self.iteraciones):
             evaluaciones = self.evaluar_poblacion(poblacion)
+            mejor_evaluacion = max(evaluaciones, key=lambda x: x[1])[1]
+            mejores_valores.append(mejor_evaluacion)
             padres = self.seleccionar_padres(evaluaciones)
-            hijos = self.cruzar_padres(padres[0][0], padres[1][0])
+            hijos = self.cruzar_padres(padres[0], padres[1])
             hijos_mutados = [self.mutar(hijo) for hijo in hijos]
             poblacion.extend(hijos_mutados)
             poblacion = sorted(poblacion, key=lambda x: self.funcion_objetivo(x), reverse=True)[:self.poblacion_tamano]
 
         mejor_solucion = max(poblacion, key=lambda x: self.funcion_objetivo(x))
-        return mejor_solucion
+        return mejor_solucion, mejores_valores
 
     def generar_solucion(self):
         return [random.randint(0, 1) for _ in range(self.num_elementos)]
@@ -71,14 +74,21 @@ class AlgoritmoGeneticoMochila:
 
 if __name__ == "__main__":
     capacidad_mochila = 50
-    pesos = [40, 20, 30, 15, 5]
+    pesos = [10, 20, 30, 15, 5]
     valores = [100, 250, 150, 80, 60]
     num_elementos = len(pesos)
 
     alg_gen = AlgoritmoGeneticoMochila(capacidad_mochila, pesos, valores, num_elementos)
-    mejor_solucion = alg_gen.algoritmo_genetico()
+    mejor_solucion, mejores_valores = alg_gen.algoritmo_genetico()
 
     print("Mejor solución encontrada:")
     for i in range(num_elementos):
         if mejor_solucion[i] == 1:
             print(f"Objeto {i+1} - Peso: {pesos[i]}, Valor: {valores[i]}")
+
+    plt.plot(mejores_valores)
+    plt.xlabel('Iteraciones')
+    plt.ylabel('Mejor valor de la función objetivo')
+    plt.title('Evolución del valor de la función objetivo')
+    plt.grid(True)
+    plt.show()
