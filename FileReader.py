@@ -23,4 +23,4 @@ class FileReader:
                     continue
                 pesos.append(int(cadena[0]))
                 valores.append(int(cadena[1]))
-        return (pesos, valores)
+        return pesos, valores
