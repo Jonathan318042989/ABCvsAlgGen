@@ -27,6 +27,7 @@ class ACAA:
         for j in range(self.iteraciones):
             for i in range(self.numero_fuentes):
                 fuentes = self.abeja_empleada(i, fuentes)
+            
                 
     def abeja_empleada(self, indice_fuente, fuentes):
         xi = fuentes[indice_fuente].solucion

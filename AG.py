@@ -1,6 +1,7 @@
 import random
 import numpy as np
 from Knapsack import *
+import matplotlib.pyplot as plt
 
 class AlgoritmoGeneticoMochila:
     def __init__(self, pesos, valores, poblacion_tamano=50, iteraciones=1000, prob_mutacion=0.1):
@@ -45,7 +46,7 @@ class AlgoritmoGeneticoMochila:
             for individuo, evaluacion in evaluaciones:
                 acumulado += 1 / (evaluacion + 1)
                 if acumulado > punto:
-                    padres_seleccionados.append((individuo, evaluacion))
+                    padres_seleccionados.append(individuo)  
                     break
         return padres_seleccionados
 
@@ -126,10 +127,10 @@ class AlgoritmoGeneticoMochila:
             padres = self.seleccionar_padres(self.evaluar_poblacion(poblacion))
             hijo1, hijo2 = None, None
             if np.random.random() <= 0.7:
-                hijo1, hijo2 = self.cruzar_padres(padres[0][0], padres[1][0])
+                hijo1, hijo2 = self.cruzar_padres(padres[0], padres[1])
             else:
-                hijo1 = padres[0][0]
-                hijo2 = padres[1][0]
+                hijo1 = padres[0]
+                hijo2 = padres[1]
             hijo1 = self.mutar(hijo1)
             hijo2 = self.mutar(hijo2)
             hijos.append(hijo1)
@@ -156,8 +157,10 @@ class AlgoritmoGeneticoMochila:
             """ 
             #primera version
             evaluaciones = self.evaluar_poblacion(poblacion)
+            mejor_evaluacion = max(evaluaciones, key=lambda x: x[1])[1]
+            mejores_valores.append(mejor_evaluacion)
             padres = self.seleccionar_padres(evaluaciones)
-            hijos = self.cruzar_padres(padres[0][0], padres[1][0])
+            hijos = self.cruzar_padres(padres[0], padres[1])
             hijos_mutados = [self.mutar(hijo) for hijo in hijos]
             poblacion.extend(hijos_mutados)
             poblacion = sorted(poblacion, key=lambda x: self.funcion_evaluacion(x), reverse=True)[:self.poblacion_tamano] """
@@ -168,13 +171,13 @@ class AlgoritmoGeneticoMochila:
 
 if __name__ == "__main__":
     capacidad_mochila = 50
-    pesos = [40, 20, 30, 15, 5]
-    valores = [100, 250, 150, 80, 60]
+    pesos = [10, 20, 30, 15, 5, 45, 10, 70, 40]
+    valores = [100, 250, 150, 80, 60, 50, 90, 70, 30]
     num_elementos = len(pesos)
 
     alg_gen = AlgoritmoGeneticoMochila(pesos, valores)
     mejor_solucion = alg_gen.algoritmo_genetico()
-
+    print(mejor_solucion)
     print("Mejor solución encontrada:")
     for i in range(num_elementos):
         if mejor_solucion[i] == 1:
