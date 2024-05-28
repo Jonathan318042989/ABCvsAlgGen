@@ -18,20 +18,19 @@ class AlgoritmoGeneticoMochila:
         self.iteraciones = iteraciones
         self.prob_mutacion = prob_mutacion
 
-    def evaluar_poblacion(self, poblacion):
-        """ Funcion para evaluar a toda la población actual
-
-        Args:
-            poblacion (list(array(int))): Población actual
-
-        Returns:
-            list(array,int): Lista con los individuos y evaluaciones
-        """
-        evaluaciones = []
-        for individuo in poblacion:
-            evaluacion = self.knapsack.funcion_evaluacion(individuo)
-            evaluaciones.append((individuo, evaluacion))
-        return evaluaciones
+    def evaluar_diversidad(self, poblacion):
+        num_individuos = len(poblacion)
+        distancias_hamming = []
+        distancias_euclidiana = []
+        for i in range(num_individuos):
+            for j in range(i + 1, num_individuos):
+                dist_hamming = self.distancia_hamming(poblacion[i], poblacion[j])
+                dist_euclidiana = self.distancia_euclidiana(poblacion[i], poblacion[j])
+                distancias_hamming.append(dist_hamming)
+                distancias_euclidiana.append(dist_euclidiana)
+        promedio_hamming = np.mean(distancias_hamming) if distancias_hamming else 0
+        promedio_euclidiana = np.mean(distancias_euclidiana) if distancias_euclidiana else 0
+        return promedio_hamming, promedio_euclidiana
 
     def seleccionar_padres(self, evaluaciones):
         """ Funció para seleccionar los padres para la cruza
@@ -83,7 +82,6 @@ class AlgoritmoGeneticoMochila:
                 individuo[i] = 1 - individuo[i] 
         return individuo
 
-
     def encuentra_peor_evaluacion(self, poblacion):
         peor_evaluacion = float("inf")
         for i in poblacion:
@@ -115,7 +113,15 @@ class AlgoritmoGeneticoMochila:
             hijos.append(hijo1)
             hijos.append(hijo2)
         return hijos
-        
+
+    def distancia_hamming(self, sol1, sol2):
+        """Calcula la distancia de Hamming entre dos soluciones"""
+        return sum(el1 != el2 for el1, el2 in zip(sol1, sol2))
+
+    def distancia_euclidiana(self, sol1, sol2):
+        """Calcula la distancia Euclidiana entre dos soluciones"""
+        return np.sqrt(sum((el1 - el2)**2 for el1, el2 in zip(sol1, sol2)))
+
     def algoritmo_genetico(self):
         """Funcion que ejecuta el algoritmo genetico
 
@@ -133,18 +139,11 @@ class AlgoritmoGeneticoMochila:
             peor_evaluacion = self.encuentra_peor_evaluacion(poblacion)
             promedio_evaluacion = (self.calcula_promedio(poblacion) + promedio_evaluacion)/2
             mejor_evaluacion = self.knapsack.funcion_evaluacion(mejor_solucion)
-            """ 
-            #primera version
-            evaluaciones = self.evaluar_poblacion(poblacion)
-            mejor_evaluacion = max(evaluaciones, key=lambda x: x[1])[1]
-            mejores_valores.append(mejor_evaluacion)
-            padres = self.seleccionar_padres(evaluaciones)
-            hijos = self.cruzar_padres(padres[0], padres[1])
-            hijos_mutados = [self.mutar(hijo) for hijo in hijos]
-            poblacion.extend(hijos_mutados)
-            poblacion = sorted(poblacion, key=lambda x: self.funcion_evaluacion(x), reverse=True)[:self.poblacion_tamano] """
+            
+            promedio_hamming, promedio_euclidiana = self.evaluar_diversidad(poblacion)
+            file.write(f"Iteración {i}: Mejor evaluación: {mejor_evaluacion}, Peor evaluación: {peor_evaluacion}, Promedio evaluación: {promedio_evaluacion}, Diversidad Hamming: {promedio_hamming}, Diversidad Euclidiana: {promedio_euclidiana}\n")
 
-        #mejor_solucion = max(poblacion, key=lambda x: self.funcion_evaluacion(x))
+        file.close()
         return mejor_solucion
 
 
