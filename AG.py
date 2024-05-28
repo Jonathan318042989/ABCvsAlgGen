@@ -3,6 +3,10 @@ import numpy as np
 from Knapsack import *
 import matplotlib.pyplot as plt
 
+class Solucion:
+    def __init__(self, solucion):
+        self.solucion = solucion
+
 class AlgoritmoGeneticoMochila:
     def __init__(self, pesos, valores, poblacion_tamano=50, iteraciones=1000, prob_mutacion=0.1):
         self.knapsack = Knapsack(pesos, valores)
@@ -49,31 +53,6 @@ class AlgoritmoGeneticoMochila:
                     padres_seleccionados.append(individuo)  
                     break
         return padres_seleccionados
-
-    def seleccion_padres_torneo(self, poblacion_actual):
-        """Función para seleccionar a 2 padres de la poblacion dada
-
-        Args:
-            poblacion_actual (array(array(int))): Poblacion actual
-
-        Returns:
-            tuple: Ambos padres seleccionados
-        """
-        padre1, padre2 = None, None
-        for j in range(2):
-            indices_individuos = np.random.choice(len(poblacion_actual), size=int(len(poblacion_actual)/10), replace=False)
-            individuos = [poblacion_actual[i] for i in indices_individuos]
-            mejor_evaluacion = 0
-            mejor_individuo_actual = None
-            for i in individuos:
-                if self.knapsack.funcion_evaluacion(i) > mejor_evaluacion:
-                    mejor_evaluacion = self.knapsack.funcion_evaluacion(i)
-                    mejor_individuo_actual = i
-            if j == 0:
-                padre1 = mejor_individuo_actual
-            else:
-                padre2 =mejor_individuo_actual
-        return padre1, padre2
 
     def cruzar_padres(self, padre1, padre2):
         """Funcion que cruza dos padres para generar dos nuevos individuos
@@ -124,7 +103,7 @@ class AlgoritmoGeneticoMochila:
         hijos = []
         hijos.append(self.knapsack.selecciona_mejor(poblacion))
         while len(hijos) < len(poblacion):
-            padres = self.seleccionar_padres(self.evaluar_poblacion(poblacion))
+            padres = self.knapsack.seleccion_padres_torneo(poblacion)
             hijo1, hijo2 = None, None
             if np.random.random() <= 0.7:
                 hijo1, hijo2 = self.cruzar_padres(padres[0], padres[1])
