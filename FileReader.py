@@ -17,10 +17,12 @@ class FileReader:
         pesos = []
         valores = []
         with open(archivo, 'r') as datos:
+            i = 0
             for linea in datos:
                 cadena = linea.strip().split()
-                if len(cadena) != 2:
+                if len(cadena) != 2 or i == 0:
+                    i+=1
                     continue
-                pesos.append(int(cadena[0]))
-                valores.append(int(cadena[1]))
+                pesos.append(int(cadena[1]))
+                valores.append(int(cadena[0]))
         return pesos, valores
