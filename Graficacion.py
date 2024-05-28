@@ -23,14 +23,14 @@ class Graficacion:
         plt.xlabel("Iteraciones")
         plt.ylabel("Evaluacion")
         #plt.yticks(y)
-        colores = ('r', 'b', 'g', 'c', 'm')
-        labels = ('exponencial', 'lineal', 'generacional', 'generacional_elitismo', 'reemplazo_peores')
+        colores = ('r', 'b')
+        labels = ('AG', 'ABC')
         for i in range(len(y)):
             plt.plot(x,y[i],marker ='o', c = colores[i], label=labels[i])
         plt.legend(loc='best')
         plt.savefig(nombre_png)
         plt.show()
-        
+    
     @staticmethod
     def grafica_distancias_euclidianas(archivos, titulo, iteraciones, nombre_png):
         x = []
@@ -393,4 +393,17 @@ class Graficacion:
 #Graficacion.grafica_entropia(files, "Entropia para Rosenbrock", 1000, output3)
 #Graficacion.grafica_boxplot(files, "Sphere", output4)
 #Graficacion.grafica_promedios()
-Graficacion.datos()
+#Graficacion.datos()
+
+#Mejores
+""" for i in range(30):
+    archivo1 = "output/AG/f2_l-d_kp_20_878_" + str(i+1) + ".txt"
+    archivo2 = "output/ABC/f2_l-d_kp_20_878_" + str(i+1) + ".txt"
+    files1 = [archivo1, archivo2]
+    output1 = "output/Graficas/Mejor/mejor_kp_20_878_" + str(i+1) + ".png"
+    archivo11 = "output/AG/f8_l-d_kp_23_10000_" + str(i+1) + ".txt"
+    archivo22 = "output/ABC/f8_l-d_kp_23_10000_" + str(i+1) + ".txt"
+    files11 = [archivo11, archivo22]
+    output11 = "output/Graficas/Mejor/f8_l-d_kp_23_10000_" + str(i+1) + ".png"
+    Graficacion.grafica_txt(files1, "Mejores evaluaciones", 1000, output1)
+    Graficacion.grafica_txt(files11, "Mejores evaluaciones", 1000, output11) """

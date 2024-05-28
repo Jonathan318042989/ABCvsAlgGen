@@ -6,7 +6,7 @@ import sys
 import math
 
 class AG:
-    def __init__(self, pesos, valores, semilla, nombre_archivo,capacidad_mochila = 1000, poblacion_tamano=10, iteraciones=100, prob_mutacion=0.1, numero_ejecucion=0):
+    def __init__(self, pesos, valores, semilla, nombre_archivo,capacidad_mochila = 1000, poblacion_tamano=50, iteraciones=1000, prob_mutacion=0.1, numero_ejecucion=0):
         self.knapsack = Knapsack(pesos, valores, semilla, capacidad_mochila)
         self.semilla = semilla
         self.capacidad_mochila = capacidad_mochila
@@ -19,20 +19,37 @@ class AG:
         self.numero_ejecucion = numero_ejecucion
         self.nombre_archivo = nombre_archivo
 
-    def evaluar_poblacion(self, poblacion):
-        """ Funcion para evaluar a toda la población actual
+    def evaluar_diversidad(self, poblacion):
+        num_individuos = len(poblacion)
+        distancias_hamming = []
+        distancias_euclidiana = []
+        for i in range(num_individuos):
+            for j in range(i + 1, num_individuos):
+                dist_hamming = self.distancia_hamming(poblacion[i], poblacion[j])
+                dist_euclidiana = self.distancia_euclidiana(poblacion[i], poblacion[j])
+                distancias_hamming.append(dist_hamming)
+                distancias_euclidiana.append(dist_euclidiana)
+        promedio_hamming = np.mean(distancias_hamming) if distancias_hamming else 0
+        promedio_euclidiana = np.mean(distancias_euclidiana) if distancias_euclidiana else 0
+        return promedio_hamming, promedio_euclidiana, distancias_hamming
 
-        Args:
-            poblacion (list(array(int))): Población actual
+    def entropia(self, distancias):
+        frecuencias = self.calcula_frecuencia_hamming(distancias)
+        total = len(distancias)
+        entropia = 0
+        for distancia in frecuencias:
+            frecuencias[distancia] = frecuencias[distancia]/total
+            entropia += frecuencias[distancia] * math.log(frecuencias[distancia])
+        return entropia*-1
 
-        Returns:
-            list(array,int): Lista con los individuos y evaluaciones
-        """
-        evaluaciones = []
-        for individuo in poblacion:
-            evaluacion = self.knapsack.funcion_evaluacion(individuo)
-            evaluaciones.append((individuo, evaluacion))
-        return evaluaciones
+    def calcula_frecuencia_hamming(self, distancias_hamming):
+        frecuencia = {}
+        for distancia in distancias_hamming:
+            if distancia in frecuencia:
+                frecuencia[distancia] += 1
+            else:
+                frecuencia[distancia] = 1
+        return frecuencia
 
     def seleccionar_padres(self, evaluaciones):
         """ Funció para seleccionar los padres para la cruza
@@ -84,7 +101,6 @@ class AG:
                 individuo[i] = 1 - individuo[i] 
         return individuo
 
-
     def encuentra_peor_evaluacion(self, poblacion):
         peor_evaluacion = float("inf")
         for i in poblacion:
@@ -117,7 +133,15 @@ class AG:
             hijos.append(hijo1)
             hijos.append(hijo2)
         return hijos
-        
+
+    def distancia_hamming(self, sol1, sol2):
+        """Calcula la distancia de Hamming entre dos soluciones"""
+        return sum(el1 != el2 for el1, el2 in zip(sol1, sol2))
+
+    def distancia_euclidiana(self, sol1, sol2):
+        """Calcula la distancia Euclidiana entre dos soluciones"""
+        return np.sqrt(sum((el1 - el2)**2 for el1, el2 in zip(sol1, sol2)))
+
     def algoritmo_genetico(self):
         """Funcion que ejecuta el algoritmo genetico
 
@@ -137,10 +161,9 @@ class AG:
             peor_evaluacion = self.encuentra_peor_evaluacion(poblacion)
             promedio_evaluacion = (self.calcula_promedio(poblacion) + promedio_evaluacion)/2
             mejor_evaluacion = self.knapsack.funcion_evaluacion(mejor_solucion)
-            distancia_euclidiana = 0
-            distancia_hamming = 0
-            entropia = 0
-            file.write(str(i) + "         " + str(mejor_evaluacion) + "         " + str(peor_evaluacion) + "                   "+ str(promedio_evaluacion) + "                   " + str(distancia_euclidiana) + "                                 " + str(distancia_hamming) + "                                     " + str(entropia) +  "\n")
+            promedio_hamming, promedio_euclidiana, distancias = self.evaluar_diversidad(poblacion)
+            entropia = self.entropia(distancias)
+            file.write(str(i) + "               " + str(mejor_evaluacion) + "                    " + str(peor_evaluacion) + "                         "+ str(promedio_evaluacion) + "                             " + str(promedio_euclidiana) + "                                    " + str(promedio_hamming) + "                                        " + str(entropia) +  "\n")
         file.write("// Semilla: " + str(self.semilla))
         file.close()
         return mejor_solucion
