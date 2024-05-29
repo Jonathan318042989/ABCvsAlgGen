@@ -12,7 +12,7 @@ class Fuente:
         
 class ABC:
     
-    def __init__(self, pesos, valores, semilla, nombre_archivo, capacidad_mochila = 1000, numero_fuentes=50, numero_abejas = 30, iteraciones=1000, prob_mutacion=0.1, numero_ejecucion = 0):
+    def __init__(self, pesos, valores, semilla, nombre_archivo, capacidad_mochila = 1000, numero_fuentes=100, iteraciones=1500, prob_mutacion=0.1, numero_ejecucion = 0):
         self.knapsack = Knapsack(pesos, valores, semilla, capacidad_mochila)
         self.semilla = semilla
         self.capacidad_mochila = capacidad_mochila
@@ -22,8 +22,7 @@ class ABC:
         self.numero_fuentes = numero_fuentes
         self.iteraciones = iteraciones
         self.prob_mutacion = prob_mutacion
-        self.numero_abejas = numero_abejas
-        self.limite_contador = int(0.6*numero_fuentes)
+        self.limite_contador = int(0.1*numero_fuentes)
         self.numero_ejecucion = numero_ejecucion
         self.nombre_archivo = nombre_archivo
         

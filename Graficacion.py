@@ -3,7 +3,7 @@ import numpy as np
 
 class Graficacion:
     @staticmethod
-    def grafica_txt(archivos, titulo, iteraciones, nombre_png):
+    def grafica_txt(archivos, titulo, iteraciones, nombre_png, columna, ylabel):
         x = []
         y = []
         i = 0
@@ -16,12 +16,12 @@ class Graficacion:
                 if int(lineas[0])%int(iteraciones/20) == 0 or int(lineas[0]) == iteraciones-1:
                     if i == 0:
                         x.append(lineas[0])
-                    z.append(float(lineas[5])) #Cambiar dependiendo que se quiere graficar
+                    z.append(float(lineas[columna])) #Cambiar dependiendo que se quiere graficar
             y.append(z)
             i += 1
         plt.title(titulo)
         plt.xlabel("Iteraciones")
-        plt.ylabel("Distancia")
+        plt.ylabel(ylabel)
         #plt.yticks(y)
         colores = ('r', 'b')
         labels = ('AG', 'ABC')
@@ -59,7 +59,7 @@ class Graficacion:
                                 
 
 #Mejores
-""" for i in range(30):
+for i in range(30):
     archivo1 = "output/AG/f2_l-d_kp_20_878_" + str(i+1) + ".txt"
     archivo2 = "output/ABC/f2_l-d_kp_20_878_" + str(i+1) + ".txt"
     files1 = [archivo1, archivo2]
@@ -68,11 +68,11 @@ class Graficacion:
     archivo22 = "output/ABC/f8_l-d_kp_23_10000_" + str(i+1) + ".txt"
     files11 = [archivo11, archivo22]
     output11 = "output/Graficas/Mejor/mejor_f8_l-d_kp_23_10000_" + str(i+1) + ".png"
-    Graficacion.grafica_txt(files1, "Mejores evaluaciones", 1000, output1)
-    Graficacion.grafica_txt(files11, "Mejores evaluaciones", 1000, output11) """
+    Graficacion.grafica_txt(files1, "Mejores evaluaciones", 1500, output1, 1, "Evaluacion")
+    Graficacion.grafica_txt(files11, "Mejores evaluaciones", 1500, output11, 1, "Evaluacion")
     
 #Promedio
-""" for i in range(30):
+for i in range(30):
     archivo1 = "output/AG/f2_l-d_kp_20_878_" + str(i+1) + ".txt"
     archivo2 = "output/ABC/f2_l-d_kp_20_878_" + str(i+1) + ".txt"
     files1 = [archivo1, archivo2]
@@ -81,11 +81,11 @@ class Graficacion:
     archivo22 = "output/ABC/f8_l-d_kp_23_10000_" + str(i+1) + ".txt"
     files11 = [archivo11, archivo22]
     output11 = "output/Graficas/Promedio/promedio_f8_l-d_kp_23_10000_" + str(i+1) + ".png"
-    Graficacion.grafica_txt(files1, "Promedio evaluaciones", 1000, output1)
-    Graficacion.grafica_txt(files11, "Promedio evaluaciones", 1000, output11) """
+    Graficacion.grafica_txt(files1, "Promedio evaluaciones", 1500, output1, 3, "Evaluacion")
+    Graficacion.grafica_txt(files11, "Promedio evaluaciones", 1500, output11, 3, "Evaluacion")
     
 #Euclidiana
-""" for i in range(30):
+for i in range(30):
     archivo1 = "output/AG/f2_l-d_kp_20_878_" + str(i+1) + ".txt"
     archivo2 = "output/ABC/f2_l-d_kp_20_878_" + str(i+1) + ".txt"
     files1 = [archivo1, archivo2]
@@ -94,11 +94,11 @@ class Graficacion:
     archivo22 = "output/ABC/f8_l-d_kp_23_10000_" + str(i+1) + ".txt"
     files11 = [archivo11, archivo22]
     output11 = "output/Graficas/Euclidiana/euclidiana_f8_l-d_kp_23_10000_" + str(i+1) + ".png"
-    Graficacion.grafica_txt(files1, "Distancia Euclidiana", 1000, output1)
-    Graficacion.grafica_txt(files11, "Distancia Euclidiana", 1000, output11) """
+    Graficacion.grafica_txt(files1, "Distancia Euclidiana", 1500, output1, 4, "Distancia")
+    Graficacion.grafica_txt(files11, "Distancia Euclidiana", 1500, output11, 4, "Distancia")
     
 #Hamming
-""" for i in range(30):
+for i in range(30):
     archivo1 = "output/AG/f2_l-d_kp_20_878_" + str(i+1) + ".txt"
     archivo2 = "output/ABC/f2_l-d_kp_20_878_" + str(i+1) + ".txt"
     files1 = [archivo1, archivo2]
@@ -107,11 +107,11 @@ class Graficacion:
     archivo22 = "output/ABC/f8_l-d_kp_23_10000_" + str(i+1) + ".txt"
     files11 = [archivo11, archivo22]
     output11 = "output/Graficas/Hamming/hamming_l-d_kp_23_10000_" + str(i+1) + ".png"
-    Graficacion.grafica_txt(files1, "Distancia Hamming", 1000, output1)
-    Graficacion.grafica_txt(files11, "Distancia Hamming", 1000, output11)"""  
+    Graficacion.grafica_txt(files1, "Distancia Hamming", 1500, output1, 5, "Distancia")
+    Graficacion.grafica_txt(files11, "Distancia Hamming", 1500, output11, 5, "Distancia")  
     
 #Entropia
-""" for i in range(30):
+for i in range(30):
     archivo1 = "output/AG/f2_l-d_kp_20_878_" + str(i+1) + ".txt"
     archivo2 = "output/ABC/f2_l-d_kp_20_878_" + str(i+1) + ".txt"
     files1 = [archivo1, archivo2]
@@ -120,8 +120,8 @@ class Graficacion:
     archivo22 = "output/ABC/f8_l-d_kp_23_10000_" + str(i+1) + ".txt"
     files11 = [archivo11, archivo22]
     output11 = "output/Graficas/Entropia/entropia_f8_l-d_kp_23_10000_" + str(i+1) + ".png"
-    Graficacion.grafica_txt(files1, "Entropia", 1000, output1)
-    Graficacion.grafica_txt(files11, "Entropia", 1000, output11)"""
+    Graficacion.grafica_txt(files1, "Entropia", 1500, output1, 6, "Entropia")
+    Graficacion.grafica_txt(files11, "Entropia", 1500, output11, 6, "Entropia")
     
 #Boxplot
 for i in range(30):

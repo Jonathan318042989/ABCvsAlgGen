@@ -6,7 +6,7 @@ import sys
 import math
 
 class AG:
-    def __init__(self, pesos, valores, semilla, nombre_archivo,capacidad_mochila = 1000, poblacion_tamano=50, iteraciones=1000, prob_mutacion=0.1, numero_ejecucion=0):
+    def __init__(self, pesos, valores, semilla, nombre_archivo,capacidad_mochila = 1000, poblacion_tamano=100, iteraciones=1500, prob_mutacion=0.2, numero_ejecucion=0):
         self.knapsack = Knapsack(pesos, valores, semilla, capacidad_mochila)
         self.semilla = semilla
         self.capacidad_mochila = capacidad_mochila
@@ -50,27 +50,6 @@ class AG:
             else:
                 frecuencia[distancia] = 1
         return frecuencia
-
-    def seleccionar_padres(self, evaluaciones):
-        """ Funció para seleccionar los padres para la cruza
-
-        Args:
-            evaluaciones: Evaluaciones de la poblacion
-
-        Returns:
-            list: lista con ambos padres
-        """
-        total_fitness = sum(1 / (evaluacion[1] + 1) for evaluacion in evaluaciones)
-        padres_seleccionados = []
-        while len(padres_seleccionados) < 2:
-            punto = random.uniform(0, total_fitness)
-            acumulado = 0
-            for individuo, evaluacion in evaluaciones:
-                acumulado += 1 / (evaluacion + 1)
-                if acumulado > punto:
-                    padres_seleccionados.append(individuo)  
-                    break
-        return padres_seleccionados
 
     def cruzar_padres(self, padre1, padre2):
         """Funcion que cruza dos padres para generar dos nuevos individuos
@@ -123,7 +102,7 @@ class AG:
         while len(hijos) < self.poblacion_tamano:
             padres = self.knapsack.seleccion_padres_torneo(poblacion)
             hijo1, hijo2 = None, None
-            if np.random.random() <= 0.7:
+            if np.random.random() <= 0.5:
                 hijo1, hijo2 = self.cruzar_padres(padres[0], padres[1])
             else:
                 hijo1 = padres[0]

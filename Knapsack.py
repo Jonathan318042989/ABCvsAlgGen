@@ -69,7 +69,7 @@ class Knapsack:
         """
         padre1, padre2 = None, None
         for j in range(2):
-            indices_individuos = np.random.choice(len(poblacion_actual), size=int(len(poblacion_actual)/10), replace=False)
+            indices_individuos = np.random.choice(len(poblacion_actual), size=int(len(poblacion_actual)/20), replace=False)
             individuos = [poblacion_actual[i] for i in indices_individuos]
             mejor_evaluacion = float('-inf') 
             mejor_individuo_actual = None
@@ -94,7 +94,7 @@ class Knapsack:
             tuple: indice de la fuente seleccionada
         """
         indice= None
-        indices_individuos = np.random.choice(len(colonia), size=int(len(colonia)/10), replace=False)
+        indices_individuos = np.random.choice(len(colonia), size=int(len(colonia)/20), replace=False)
         mejor_evaluacion = float('-inf') 
         for i in range(len(indices_individuos)):
             evaluacion = self.funcion_evaluacion(colonia[indices_individuos[i]].solucion)
